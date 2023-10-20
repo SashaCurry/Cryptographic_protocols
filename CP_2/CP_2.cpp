@@ -2,367 +2,300 @@
 #include "cmath"
 #include "vector"
 #include "string"
-#include <chrono>
+#include "chrono"
+#include "map"
+#include "fstream"
 #include "boost/multiprecision/cpp_int.hpp"
 
 using namespace std;
 using namespace std::chrono;
 using namespace boost::multiprecision;
 
-map <char, string> book { {'0', "11"}, {'1', "12"}, {'2', "13"}, {'3', "14"}, {'4', "15"}, {'5', "16"}, {'6', "17"}, {'7', "18"}, {'8', "19"}, {'9', "21"},
-                            {' ', "22"}, {'!', "23"}, {'"', "24"}, {'#', "25"}, {'$', "26"}, {'%', "27"}, {'^', "28"}, {'&', "29"}, {'\'', "31"}, {'(', "32"},
-                            {')', "33"}, {'*', "34"}, {'+', "35"}, {',', "36"}, {'-', "37"}, {'.', "38"}, {'/', "39"}, {':', "41"}, {';', "42"}, {'<', "43"},
-                            {'=', "44"}, {'>', "45"}, {'?', "46"}, {'@', "47"}, {'[', "48"}, {'\\', "49"}, {']', "51"}, {'_', "52"}, {'`', "53"}, {'{', "54"},
-                            {'}', "55"}, {'|', "56"}, {'~', "57"}, {'\n', "58"}, {'а', "59"}, {'б', "61"}, {'в', "62"}, {'г', "63"}, {'д', "64"}, {'е', "65"},
-                            {'ё', "66"}, {'ж', "67"}, {'з', "68"}, {'и', "69"}, {'й', "71"}, {'к', "72"}, {'л', "73"}, {'м', "74"}, {'н', "75"}, {'о', "76"},
-                            {'п', "77"}, {'р', "78"}, {'с', "79"}, {'т', "81"}, {'у', "82"}, {'ф', "83"}, {'х', "84"}, {'ц', "85"}, {'ч', "86"}, {'ш', "87"},
-                            {'щ', "88"}, {'ъ', "89"}, {'ы', "91"}, {'ь', "92"}, {'э', "93"}, {'ю', "94"}, {'я', "95"} };
+map <char, string> book{ {'0', "111"}, {'1', "112"}, {'2', "113"}, {'3', "114"}, {'4', "115"}, {'5', "116"}, {'6', "117"}, {'7', "118"}, {'8', "119"},
+                         {'9', "121"}, {' ', "122"}, {'!', "123"}, {'"', "124"}, {'#', "125"}, {'$', "126"}, {'%', "127"}, {'^', "128"}, {'&', "129"},
+                         {'\'', "131"}, {'(', "132"}, {')', "133"}, {'*', "134"}, {'+', "135"}, {',', "136"}, {'-', "137"}, {'.', "138"}, {'/', "139"},
+                         {':', "141"}, {';', "142"}, {'<', "143"}, {'=', "144"}, {'>', "145"}, {'?', "146"}, {'@', "147"}, {'[', "148"}, {'\\', "149"},
+                         {']', "151"}, {'_', "152"}, {'`', "153"}, {'{', "154"}, {'}', "155"}, {'|', "156"}, {'~', "157"}, {'\n', "158"}, {'a', "159"},
+                         {'b', "161"}, {'c', "162"}, {'d', "163"}, {'e', "164"}, {'f', "165"}, {'g', "166"}, {'h', "167"}, {'i', "168"}, {'j', "169"},
+                         {'k', "171"}, {'l', "172"}, {'m', "173"}, {'n', "174"}, {'o', "175"}, {'p', "176"}, {'q', "177"}, {'r', "178"}, {'s', "179"},
+                         {'t', "181"}, {'u', "182"}, {'v', "183"}, {'w', "184"}, {'x', "185"}, {'y', "186"}, {'z', "187"}, {'A', "188"}, {'B', "189"},
+                         {'C', "191"}, {'D', "192"}, {'E', "193"}, {'F', "194"}, {'G', "195"}, {'H', "196"}, {'I', "197"}, {'J', "198"}, {'K', "199"},
+                         {'L', "211"}, {'M', "212"}, {'N', "213"}, {'O', "214"}, {'P', "215"}, {'Q', "216"}, {'R', "217"}, {'S', "218"}, {'T', "219"},
+                         {'U', "221"}, {'V', "222"}, {'W', "223"}, {'X', "224"}, {'Y', "225"}, {'Z', "226"} };
 
-map <string, char> bookRvs{ {"11", '0'}, {"12", '1'}, {"13", '2'}, {"14", '3'}, {"15", '4'}, {"16", '5'}, {"17", '6'}, {"18", '7'}, {"19", '8'}, {"21", '9'},
-                            {"22", ' '}, {"23", '!'}, {"24", '"'}, {"25", '#'}, {"26", '$'}, {"27", '%'}, {"28", '^'}, {"29", '&'}, {"31", '\''}, {"32", '('},
-                            {"33", ')'}, {"34", '*'}, {"35", '+'}, {"36", ','}, {"37", '-'}, {"38", '.'}, {"39", '/'}, {"41", ':'}, {"42", ';'}, {"43", '<'},
-                            {"44", '='}, {"45", '>'}, {"46", '?'}, {"47", '@'}, {"48", '['}, {"49", '\\'}, {"51", ']'}, {"52", '_'}, {"53", '`'}, {"54", '{'},
-                            {"55", '}'}, {"56", '|'}, {"57", '~'}, {"58", '\n'}, {"59", 'а'}, {"61", 'б'}, {"62", 'в'}, {"63", 'г'}, {"64", 'д'}, {"65", 'е'},
-                            {"66", 'ё'}, {"67", 'ж'}, {"68", 'з'}, {"69", 'и'}, {"71", 'й'}, {"72", 'к'}, {"73", 'л'}, {"74", 'м'}, {"75", 'н'}, {"76", 'о'},
-                            {"77", 'п'}, {"78", 'р'}, {"79", 'с'}, {"81", 'т'}, {"82", 'у'}, {"83", 'ф'}, {"84", 'х'}, {"85", 'ц'}, {"86", 'ч'}, {"87", 'ш'},
-                            {"88", 'щ'}, {"89", 'ъ'}, {"91", 'ы'}, {"92", 'ь'}, {"93", 'э'}, {"94", 'ю'}, {"95", 'я'} };
-
-set <char> workSymbs{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '!', '\"', '#', '$', '%', '^', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
-                        ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '_', '`', '{', '}', '|', '~', '\n', 'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з',
-                        'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я' };
-
-set <char> upSymbs{ 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П',
-                    'Р', 'С', 'Т', 'У', 'Ф', 'Ч', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я' };
+map <string, char> bookRvs{ {"111", '0'}, {"112", '1'}, {"113", '2'}, {"114", '3'}, {"115", '4'}, {"116", '5'}, {"117", '6'}, {"118", '7'}, {"119", '8'},
+                            {"121", '9'}, {"122", ' '}, {"123", '!'}, {"124", '"'}, {"125", '#'}, {"126", '$'}, {"127", '%'}, {"128", '^'}, {"129", '&'},
+                            {"131", '\''}, {"132", '('}, {"133", ')'}, {"134", '*'}, {"135", '+'}, {"136", ','}, {"137", '-'}, {"138", '.'}, {"139", '/'},
+                            {"141", ':'}, {"142", ';'}, {"143", '<'}, {"144", '='}, {"145", '>'}, {"146", '?'}, {"147", '@'}, {"148", '['}, {"149", '\\'},
+                            {"151", ']'}, {"152", '_'}, {"153", '`'}, {"154", '{'}, {"155", '}'}, {"156", '|'}, {"157", '~'}, {"158", '\n'}, {"159", 'a'},
+                            {"161", 'b'}, {"162", 'c'}, {"163", 'd'}, {"164", 'e'}, {"165", 'f'}, {"166", 'g'}, {"167", 'h'}, {"168", 'i'}, {"169", 'j'},
+                            {"171", 'k'}, {"172", 'l'}, {"173", 'm'}, {"174", 'n'}, {"175", 'o'}, {"176", 'p'}, {"177", 'q'}, {"178", 'r'}, {"179", 's'},
+                            {"181", 't'}, {"182", 'u'}, {"183", 'v'}, {"184", 'w'}, {"185", 'x'}, {"186", 'y'}, {"187", 'z'}, {"188", 'A'}, {"189", 'B'}, 
+                            {"191", 'C'}, {"192", 'D'}, {"193", 'E'}, {"194", 'F'}, {"195", 'G'}, {"196", 'H'}, {"197", 'I'}, {"198", 'J'}, {"199", 'K'}, 
+                            {"211", 'L'}, {"212", 'M'}, {"213", 'N'}, {"214", 'O'}, {"215", 'P'}, {"216", 'Q'}, {"217", 'R'}, {"218", 'S'}, {"219", 'T'}, 
+                            {"221", 'U'}, {"222", 'V'}, {"223", 'W'}, {"224", 'X'}, {"225", 'Y'}, {"226", 'Z'} };
 
 
 vector <cpp_int> deg2(cpp_int el, cpp_int n) {
-	vector <cpp_int> res;
-	while (n != 0) {
-		if (n / el == 1) {
-			res.push_back(el);
-			n -= el;
-			el = 1;
-		}
-		else
-			el *= 2;
-	}
-	return res;
+    vector <cpp_int> res;
+    while (n != 0) {
+        if (n / el == 1) {
+            res.push_back(el);
+            n -= el;
+            el = 1;
+        }
+        else
+            el *= 2;
+    }
+    return res;
 }
 
 
 cpp_int multMod(cpp_int n, cpp_int mod, vector <pair <cpp_int, cpp_int>> lst) {
-	if (lst.size() == 1) {
-		cpp_int res = 1;
-		for (int i = 0; i < lst[0].second; i++)
-			res = res * lst[0].first % mod;
-		return res;
-	}
-	else if (lst[0].second == 1) {
-		cpp_int el = lst[0].first;
-		lst.erase(lst.begin());
-		return (el * multMod(n, mod, lst)) % mod;
-	}
-	else {
-		for (int i = 0; i < lst.size(); i++)
-			if (lst[i].second > 1) {
-				lst[i].first = (lst[i].first * lst[i].first) % mod;
-				lst[i].second /= 2;
-			}
-		return multMod(n, mod, lst);
-	}
+    if (lst.size() == 1) {
+        cpp_int res = 1;
+        for (int i = 0; i < lst[0].second; i++)
+            res = res * lst[0].first % mod;
+        return res;
+    }
+    else if (lst[0].second == 1) {
+        cpp_int el = lst[0].first;
+        lst.erase(lst.begin());
+        return (el * multMod(n, mod, lst)) % mod;
+    }
+    else {
+        for (int i = 0; i < lst.size(); i++)
+            if (lst[i].second > 1) {
+                lst[i].first = (lst[i].first * lst[i].first) % mod;
+                lst[i].second /= 2;
+            }
+        return multMod(n, mod, lst);
+    }
 }
 
 
 cpp_int powClosed(cpp_int x, cpp_int y, cpp_int mod) {
-	if (y == 0)
-		return 1;
+    if (y == 0)
+        return 1;
 
-	vector <cpp_int> lst = deg2(1, y);
-	vector <pair <cpp_int, cpp_int>> xDegs;
-	for (int i = 0; i < lst.size(); i++)
-		xDegs.push_back(make_pair(x, lst[i]));
+    vector <cpp_int> lst = deg2(1, y);
+    vector <pair <cpp_int, cpp_int>> xDegs;
+    for (int i = 0; i < lst.size(); i++)
+        xDegs.push_back(make_pair(x, lst[i]));
 
-	cpp_int res = multMod(x, mod, xDegs);
-	return res;
+    cpp_int res = multMod(x, mod, xDegs);
+    return res;
 }
 
 
 cpp_int usualEuclid(cpp_int a, cpp_int b) {
-	if (a < b)
-		swap(a, b);
-	if (a < 0 || b < 0)
-		throw string{ "Выполнение невозможно: a < 0 или b < 0" };
-	else if (b == 0)
-		return a;
+    if (a < b)
+        swap(a, b);
+    if (a < 0 || b < 0)
+        throw string{ "Выполнение невозможно: a < 0 или b < 0" };
+    else if (b == 0)
+        return a;
 
-	cpp_int r = a % b;
-	return usualEuclid(b, r);
+    cpp_int r = a % b;
+    return usualEuclid(b, r);
 }
 
 
 cpp_int decForm(string x) {
-	cpp_int res = 0, deg = 1;
-	if (x.back() == '1')
-		res += 1;
-	for (int i = 1; i < x.length(); i++) {
-		deg = deg * 2;
-		if (x[x.length() - i - 1] == '1')
-			res += deg;
-	}
-	return res;
+    cpp_int res = 0, deg = 1;
+    if (x.back() == '1')
+        res += 1;
+    for (int i = 1; i < x.length(); i++) {
+        deg = deg * 2;
+        if (x[x.length() - i - 1] == '1')
+            res += deg;
+    }
+    return res;
 }
 
 
 bool miller_rabin(cpp_int n, int k = 10) {
-	if (n == 0 || n == 1)
-		return false;
+    if (n == 0 || n == 1)
+        return false;
 
-	cpp_int d = n - 1;
-	cpp_int s = 0;
-	while (d % 2 == 0) {
-		s++;
-		d = d / 2;
-	}
+    cpp_int d = n - 1;
+    cpp_int s = 0;
+    while (d % 2 == 0) {
+        s++;
+        d = d / 2;
+    }
 
-	cpp_int nDec = n - 1;
-	for (int i = 0; i < k; i++) {
-		cpp_int a = rand() % nDec;
-		if (a == 0 || a == 1)
-			a = a + 2;
+    cpp_int nDec = n - 1;
+    for (int i = 0; i < k; i++) {
+        cpp_int a = rand() % nDec;
+        if (a == 0 || a == 1)
+            a = a + 2;
 
-		cpp_int x = powClosed(a, d, n);
-		if (x == 1 || x == nDec)
-			continue;
+        cpp_int x = powClosed(a, d, n);
+        if (x == 1 || x == nDec)
+            continue;
 
-		bool flag = false;
-		for (int j = 0; j < s; j++) {
-			x = (x * x) % n;
-			if (x == nDec) {
-				flag = true;
-				break;
-			}
-		}
-		if (!flag)
-			return false;
-	}
+        bool flag = false;
+        for (int j = 0; j < s; j++) {
+            x = (x * x) % n;
+            if (x == nDec) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag)
+            return false;
+    }
 
-	return true;
+    return true;
 }
 
 
-vector <cpp_int>  generateKeys(cpp_int x) {
-	cpp_int q = rand();
-	while (!miller_rabin(q))
-		q++;
+vector <cpp_int> generateKeys(cpp_int x) {
+    cpp_int q = rand();
+    while (!miller_rabin(q))
+        q++;
 
-	cpp_int s, p = 2, pDec;
-	while (!miller_rabin(p)) {
-		string sBin = "";
-		int sBinSize = rand() % 50 + 1;
-		for (int i = 0; i < sBinSize; i++)
-			sBin = sBin + to_string(rand() % 2);
-		s = decForm(sBin);
+    cpp_int s, p = 2, pDec;
+    while (!miller_rabin(p)) {
+        string sBin = "";
+        int sBinSize = rand() % 50 + 1;
+        for (int i = 0; i < sBinSize; i++)
+            sBin = sBin + to_string(rand() % 2);
+        s = decForm(sBin);
 
-		p = (q * s) + 1;
-		pDec = p - 1;
-	}
+        p = (q * s) + 1;
+        pDec = p - 1;
+    }
 
-	cpp_int a = 2, g;
-	while (pDec > a) {
-		g = powClosed(a, pDec / q, p);
-		if (g == 1) {
-			a++;
-			continue;
-		}
-		break;
-	}
+    cpp_int a = 2, g;
+    while (pDec > a) {
+        g = powClosed(a, pDec / q, p);
+        if (g == 1) {
+            a++;
+            continue;
+        }
+        break;
+    }
 
-	cpp_int y = powClosed(g, x % p, p);	
-	return vector <cpp_int> {y, g, p}
+    cpp_int y = powClosed(g, x % p, p);
+    return vector <cpp_int> {p, g, y};
 }
 
 
 //////////////////////////////////////////////////////////////////////РЕЖИМ ШИФРОВАНИЯ///////////////////////////////////////////////////////////////////////
-vector <string> getKeys() {
-    vector <string> keys;
-    ifstream fin;
-    while (true) {
-        string fileKeys;
-        cout << "\nФайл с ключами (по умолчанию keys.txt): ";
-        getline(cin, fileKeys);
-        if (fileKeys == "")
-            fileKeys = "keys.txt";
+vector <pair <cpp_int, cpp_int>> encryption(vector <cpp_int> keysPGY, cpp_int x, string message) {
+    vector <pair <cpp_int, cpp_int>> res;
+    cpp_int p = keysPGY[0], g = keysPGY[1], y = keysPGY[2];
 
-        fin.open(fileKeys);
-        if (fin.is_open())
-            break;
-        else
-            cout << "Файл " << fileKeys << " не найден! \n";
-    }
-
-    string str;
-    while (getline(fin, str))
-        keys.push_back(str.substr(4));
-
-    return keys;
-}
-
-
-string clearText() {
-    ifstream fin;
-    string fileText;
-    while (true) {
-        cout << "\nФайл с текстом (по умолчанию start.txt): ";
-        getline(cin, fileText);
-        if (fileText == "")
-            fileText = "start.txt";
-
-        fin.open(fileText);
-        if (fin.is_open())
-            break;
-        else
-            cout << "Файл " << fileText << " не найден! \n";
-    }
-
-    cout << "Была произведена очистка текста от неизвестных символов и приведение к нижнему регистру. Получившийся текст: \n";
-    ofstream fout("clear_" + fileText);
-    char el;
     string codeSymbs = "";
-    while (fin.get(el)) {
-        if (upSymbs.find(el) != upSymbs.end()) {
-            cout << char(el + 32);
-            fout << char(el + 32);
-            codeSymbs += book[char(el + 32)];
-        }
-        else if (workSymbs.find(el) == workSymbs.end())
-            continue;
-        else {
-            cout << el;
-            fout << el;
-            codeSymbs += book[el];
-        }
-    }
+    for (int i = 0; i < message.length(); i++)
+        codeSymbs += book[message[i]];
 
-    fin.close();
-    fout.close();
-    return codeSymbs;
-}
-
-
-void encryption() {
-    vector <string> keysPGXY = getKeys();
-    string p = keysPGXY[0], g = keysPGXY[1], x = keysPGXY[2], y = keysPGXY[3];
-    cout << "p = " << p << "\ng = " << g << "\nx = " << x << "\ny = " << y << endl;
-    string codeSymbs = clearText();
-    cout << "\n\nТекст, представленный в виде кодов его символов: " << codeSymbs;
-
-    cout << "\n\nШифртекст (сохранён в файл encryptText.txt): ";
-    ofstream fout("encryptText.txt");
-    int offset = p.size();
+    int offset = to_string(p).size();
     for (int i = 0; i < codeSymbs.length(); i += offset) {
-        string M = codeSymbs.substr(i, offset);
-        if (division(M, p).first != "0") {
-            M.pop_back();
+        cpp_int M(codeSymbs.substr(i, offset));
+        if (M / p != 0) {
+            string help = to_string(M);
+            help.pop_back();
+            cpp_int m(help);
+            M = m;
             i--;
         }
 
-        string k = "2", pDec = subtraction(p, "1");
-        int offset = pDec.length();
-        while (nod(k, pDec) != "1") {
+        cpp_int k = 2;
+        while (usualEuclid(k, p - 1) != 1) {
             string kBin = "";
             int kBinSize = rand() % offset;
             for (int i = 0; i < kBinSize; i++)
                 kBin = kBin + to_string(rand() % 2);
-            k = division(decForm(kBin + "1"), p).second;
+            k = decForm(kBin + "1") % p;
         }
 
-        string a = exponentiation(g, k, p), b = division(multiplication(exponentiation(y, k, p), M), p).second;
-        cout << "(" << a << "," << b << ") ";
-        fout << "(" << a << "," << b << ") ";
+        res.push_back(make_pair(powClosed(g, k, p), powClosed(y, k, p) * M % p));
     }
-    cout << endl;
-    fout.close();
+    return res;
 }
 
 
 /////////////////////////////////////////////////////////////////////РЕЖИМ РАСШИФРОВАНИЯ//////////////////////////////////////////////////////////////////////
-void decryption() {
-    vector <string> keysPGXY = getKeys();
-    string p = keysPGXY[0], g = keysPGXY[1], x = keysPGXY[2], y = keysPGXY[3];
-    cout << "p = " << p << "\ng = " << g << "\nx = " << x << "\ny = " << y << endl;
-
-    ifstream fin;
-    string fileText;
-    while (true) {
-        cout << "\nФайл с шифртекстом (по умолчанию encryptText.txt): ";
-        getline(cin, fileText);
-        if (fileText == "")
-            fileText = "encryptText.txt";
-
-        fin.open(fileText);
-        if (fin.is_open())
-            break;
-        else
-            cout << "Файл " << fileText << " не найден! \n";
-    }
+string decryption(vector <cpp_int> keysPGY, cpp_int x, vector <pair <cpp_int, cpp_int>> ciphertext) {
+    string res = "";
+    cpp_int p = keysPGY[0], g = keysPGY[1], y = keysPGY[2];
 
     string codeSymbs = "";
-    cout << "Шифртекст: \n";
-    string str = "", a = "", b = "", pDec = subtraction(p, "1");
-    char el;
-    while (fin.get(el)) {
-        cout << el;
-        if (el == '(') {
-            a = "";
-            b = "";
-        }
-        else if (el == ',') {
-            a = str;
-            str = "";
-        }
-        else if (el == ')') {
-            b = str;
-            str = "";
-            codeSymbs += division(multiplication(b, exponentiation(a, subtraction(pDec, x), p)), p).second; //b * a^(p-1-x) mod p
-        }
-        else if (isdigit(el))
-            str += el;
+    for (int i = 0; i < ciphertext.size(); i++) {
+        cpp_int M, a = ciphertext[i].first, b = ciphertext[i].second;
+        M = powClosed(a, p - 1 - (x % p), p) * b % p;
+        codeSymbs += to_string(M);
     }
-
-    cout << "\n\nТекст, представленный в виде кодов его символов: " << codeSymbs << endl;
-
-    cout << "\nРасшифрованный текст (сохранён в файле decryptText.txt): \n";
-    ofstream fout("decryptText.txt");
-    for (int i = 0; i < codeSymbs.length(); i += 2) {
-        string M = codeSymbs.substr(i, 2);
-        if (bookRvs.find(M) == bookRvs.end())
-            continue;
-        cout << bookRvs[M];
-        fout << bookRvs[M];
+  
+    for (int i = 0; i < codeSymbs.length(); i += 3) {
+        string M = codeSymbs.substr(i, 3);
+        res += bookRvs[M];
     }
-    cout << endl;
-
-    fin.close();
-    fout.close();
+    return res;
 }
 
 
 void kerberos(pair <string, string>* users) {
     hash <string> hashStr;
-    cpp_int keyUser1(hashStr(users[0].second)), keyUser2 (hashStr(users[1].second));
+    cpp_int keyUser1(hashStr(users[0].second)), keyUser2(hashStr(users[1].second));
     cout << "\nПользователь " << users[0].first << " зерегистрирован в системе Kerberos. Общий секретный ключ: " << keyUser1;
     cout << "\nПользователь " << users[1].first << " зарегистрирован в системе Kerberos. Общий секретный ключ: " << keyUser2;
 
     cout << "\n\nПользователь " << users[0].first << " отправляет Kerberos сообщение (" << users[0].first << ", " << users[1].first << ")";
 
     uint64_t sec = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
-    cpp_int timestamp(sec), ttl = 300, mainKey = rand() * rand() * rand();
-    cout << "\n\nKerberos создаёт сообщение (" << timestamp << ", " << ttl << ", " << mainKey << ", " << users[0].first << ") для пользователя " << users[1].first;
-    cout << "\nKerberos создаёт сообщение (" << timestamp << ", " << ttl << ", " << mainKey << ", " << users[1].first << ") для пользователя " << users[1].first;
-    
+    cpp_int timestamp(sec), ttl = 300, mainKey = abs(rand() * rand() * rand());
+    string messageForUser1 = "(" + to_string(timestamp) + ", " + to_string(ttl) + ", " + to_string(mainKey) + ", " + users[1].first + ")";
+    vector <cpp_int> keysPGYforUser1 = generateKeys(keyUser1);
+    vector <pair <cpp_int, cpp_int>> encMessageForUser1 = encryption(keysPGYforUser1, keyUser1, messageForUser1);
+    cout << "\n\nKerberos создаёт сообщение (T, L, K, B) = " << messageForUser1 << " для пользователя " << users[0].first << ", генерирует открытые ключи ";
+    cout << "(p, g, y) = (" << keysPGYforUser1[0] << ", " << keysPGYforUser1[1] << ", " << keysPGYforUser1[2] << ") и зашифровывает сообщение общим секретным ключом: ";
+    for (int i = 0; i < encMessageForUser1.size(); i++)
+        cout << "(" << encMessageForUser1[i].first << ":" << encMessageForUser1[i].second << ") ";
+
+    string messageForUser2 = "(" + to_string(timestamp) + ", " + to_string(ttl) + ", " + to_string(mainKey) + ", " + users[0].first + ")";
+    vector <cpp_int> keysPGYforUser2 = generateKeys(keyUser2);
+    vector <pair <cpp_int, cpp_int>> encMessageForUser2 = encryption(keysPGYforUser2, keyUser2, messageForUser2);
+    cout << "\n\nKerberos создаёт сообщение (T, L, K, A) = " << messageForUser2 << " для пользователя " << users[1].first << ", генерирует открытые ключи ";
+    cout << "(p, g, y) = (" << keysPGYforUser2[0] << ", " << keysPGYforUser2[1] << ", " << keysPGYforUser2[2] << ") и зашифровывает сообщение общим секретным ключом: ";
+    for (int i = 0; i < encMessageForUser2.size(); i++)
+        cout << "(" << encMessageForUser2[i].first << ":" << encMessageForUser2[i].second << ") ";
+
+    cout << "\n\nЗашифрованные сообщения и сгенерированные ключи отправляются пользователю " << users[0].first;
+
+    string decMessageForUser1 = decryption(keysPGYforUser1, keyUser1, encMessageForUser1);
+    cout << "\n\nПользователь " << users[0].first << " получает сообщения. Сообщение для пользователя " << users[0].first << ": " << decMessageForUser1;
+
+    string message = "(" + users[0].first + ", " + to_string(timestamp) + ")";
+    vector <cpp_int> keys = generateKeys(mainKey);
+    vector <pair <cpp_int, cpp_int>> encMessage = encryption(keys, mainKey, message);
+    cout << ". Далее пользователя формирует собщение (A, T) = " << message << " и зашифровывает сеансовым ключом : ";
+    for (int i = 0; i < encMessage.size(); i++)
+        cout << "(" << encMessage[i].first << ":" << encMessage[i].second << ") ";
+    cout << "\nСообщения (A, T) и (T, L, K, A) передаёт пользователю " << users[1].first;
+
+    string decMessageForUser2 = decryption(keysPGYforUser2, keyUser2, encMessageForUser2);
+    string decMessage = decryption(keys, mainKey, encMessage);
+    cout << "\n\nПользователь " << users[1].first << " получает свои сообщение и расшифровывает: ";
+    cout << "(A, T) = " << decMessage << " и (T, L, K, A) = " << decMessageForUser2;
+
+    timestamp += 1;
+    message = to_string(timestamp);
+    encMessage = encryption(keys, mainKey, message);
+    cout << "\n\nПользователь " << users[1].first << " Создаёт сообщение (T + 1) = " << message << ", зашифровывает его сеансовым ключом и отправляет";
+    cout << " пользователю " << users[0].first << ": ";
+    for (int i = 0; i < encMessage.size(); i++)
+        cout << "(" << encMessage[i].first << ":" << encMessage[i].second << ") ";
+
+    cout << "\n\nПользователь " << users[0].first << " получает сообщение от " << users[1].first << " и расшифровывает его: " << decryption(keys, mainKey, encMessage);
 }
 
+
 int main() {
+    srand(time(0));
     setlocale(LC_ALL, "ru");
     cout << "\tПротокол Kerberos";
 
